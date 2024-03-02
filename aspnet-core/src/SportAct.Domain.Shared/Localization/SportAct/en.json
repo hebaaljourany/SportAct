@@ -1,0 +1,62 @@
+{
+  "Culture": "en",
+  "Texts": {
+    "Menu:Home": "Home",
+    "Welcome": "Welcome",
+    "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information, visit abp.io.",
+    "Menu:Sport-Activity": "Sport Activity",
+    "Menu:Clients": "Clients",
+    "Menu:Cities": "Cities",
+    "Menu:Locations": "Locations",
+    "Menu:SportActivities": "SportActivities",
+    "Menu:ActivityTypes": "ActivityTypes",
+    "Menu:Reservations": "Reservations",
+
+
+
+    "Actions": "Actions",
+    "Close": "Close",
+    "Delete": "Delete",
+    "Edit": "Edit",
+
+    "NewClient": "New client",
+    "NewCity": "NewCity",
+    "NewLocation": "NewLocation",
+    "NewSportActivity": "NewSportActivity",
+    "NewActivityType": "NewActivityType",
+    "NewReservation": "NewReservation",
+
+
+    "FirstName": "FirstName",
+    "LastName": "LastName",
+    "EmailAddress": "Email address",
+    "MobileNumber": "Mobile number",
+    "CityName": "CityName",
+    "LocationName": "LocationName",
+    "ActivityName": "ActivityName",
+    "Capacity": "Capacity",
+    "Cost": "Cost",
+    "MinimumAge": "MinimumAge",
+    "MaximumAge": "MaximumAge",
+    "StartedTime": "StartedTime",
+    "EndedTime": "EndedTime",
+    "Description": "Description",
+    "ActivityTypeName": "ActivityTypeName",
+    "Participants": "Participants",
+
+
+
+    "CreationTime": "Creation time",
+    "AreYouSure": "Are you sure?",
+    "AreYouSureToDelete": "Are you sure you want to delete this item?",
+
+    "BookStore:00001": "There is already an city with the same name: {cityname}",
+    "BookStore:00002": "There is already an Location with the same name: {locationname}",
+    "BookStore:00003": "There is already an ActivityType with the same name: {activitytypename}",
+    "BookStore:00004": "There is already an SportActivity with the same name: {activityname}"
+
+
+
+
+  }
+}
