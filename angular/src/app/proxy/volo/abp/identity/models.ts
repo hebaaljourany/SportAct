@@ -1,31 +1,4 @@
-import type { ExtensibleEntityDto, ExtensibleFullAuditedEntityDto, ExtensibleObject, PagedAndSortedResultRequestDto } from '@abp/ng.core';
-
-export interface GetIdentityUsersInput extends PagedAndSortedResultRequestDto {
-  filter?: string;
-}
-
-export interface IdentityRoleDto extends ExtensibleEntityDto<string> {
-  name?: string;
-  isDefault: boolean;
-  isStatic: boolean;
-  isPublic: boolean;
-  concurrencyStamp?: string;
-}
-
-export interface IdentityUserCreateDto extends IdentityUserCreateOrUpdateDtoBase {
-  password: string;
-}
-
-export interface IdentityUserCreateOrUpdateDtoBase extends ExtensibleObject {
-  userName: string;
-  name?: string;
-  surname?: string;
-  email: string;
-  phoneNumber?: string;
-  isActive: boolean;
-  lockoutEnabled: boolean;
-  roleNames: string[];
-}
+import type { ExtensibleFullAuditedEntityDto } from '@abp/ng.core';
 
 export interface IdentityUserDto extends ExtensibleFullAuditedEntityDto<string> {
   tenantId?: string;
@@ -40,13 +13,4 @@ export interface IdentityUserDto extends ExtensibleFullAuditedEntityDto<string> 
   lockoutEnabled: boolean;
   lockoutEnd?: string;
   concurrencyStamp?: string;
-}
-
-export interface IdentityUserUpdateDto extends IdentityUserCreateOrUpdateDtoBase {
-  password?: string;
-  concurrencyStamp?: string;
-}
-
-export interface IdentityUserUpdateRolesDto {
-  roleNames: string[];
 }

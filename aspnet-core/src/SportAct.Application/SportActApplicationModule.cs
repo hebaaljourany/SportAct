@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using SportAct.Domain;
-using SportAct.MyIdentity;
 using System;
 using System.Collections.Generic;
 using Volo.Abp.Account;
@@ -13,9 +12,10 @@ using Volo.Abp.PermissionManagement;
 using Volo.Abp.SettingManagement;
 using Volo.Abp.TenantManagement;
 using Microsoft.AspNetCore.Authorization;
-
-
-
+using SportAct.Controllers;
+using Volo.Abp.AspNetCore.Mvc;
+using SportAct.MyAccount;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace SportAct;
 
@@ -37,20 +37,26 @@ public class SportActApplicationModule : AbpModule
         {
             options.AddMaps<SportActApplicationModule>();
         });
-        // Configure your custom app service
-       // context.Services.AddScoped<MyIdentityAppService>();
-        context.Services.AddTransient<IdentityUserAppService, MyIdentityAppService>();
-       
-
-        Configure<AuthorizationOptions>(options =>
+        Configure<AbpAspNetCoreMvcOptions>(options =>
         {
-            options.AddPolicy("MyIdentityPolicy", policy =>
-            {
-               policy.RequireAuthenticatedUser(); // Require the user to be authenticated
-                                                   // Add additional requirements if needed
-            });
+            options.ConventionalControllers.Create(typeof(MyAccountController).Assembly);
         });
+        context.Services.AddTransient<AccountAppService, MyAccountAppService>();
+        // context.Services.AddTransient<IMyAccountAppService, MyAccountAppService>();
+        /* context.Services.Replace(
+     ServiceDescriptor.Transient<IAccountAppService, IMyAccountAppService>()*/
+        context.Services.Replace(
+     ServiceDescriptor.Transient<IAccountAppService, MyAccountAppService>());
 
+        // context.Services.AddTransient<IAccountService, AccountService>();
+        // Add your custom controller to dependency injection
+        //context.Services.AddTransient<MyAccountController>();
+        //context.Services.AddTransient<MyAccountController>();
+        /*Configure<AbpAspNetCoreMvcOptions>(options =>
+         {
+             options.IgnoredControllersOnModelExclusion
+                    .AddIfNotContains(typeof(MyAccountController));
+         });*/
     }
 }
 

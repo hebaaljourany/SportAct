@@ -7,7 +7,7 @@ export const environment = {
   application: {
     baseUrl,
     name: 'SportAct',
-    logoUrl: '',
+    logoUrl: 'assets/logo.png',
   },
   oAuthConfig: {
     issuer: 'https://localhost:44381/',

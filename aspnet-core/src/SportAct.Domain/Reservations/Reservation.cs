@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SportAct.Domain;
+using SportAct.SportActivities;
+using System;
 using Volo.Abp.Domain.Entities.Auditing;
 
 namespace SportAct.Reservations
@@ -8,8 +10,10 @@ namespace SportAct.Reservations
     {
 
 
-        public int Participants { get; set; }
+        //public int Participants { get; set; }
+        public SportActivity SportActivity { get; set; }
         public Guid SportActivityId { get; set; }
+        public Client Client { get; set; }
         public Guid ClientId { get; set; }
 
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SportAct.Permissions;
+using System;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
@@ -17,7 +18,11 @@ namespace SportAct.ActivityTypes
         public ActivityTypeAppService(IRepository<ActivityType, Guid> repository)
             : base(repository)
         {
-
+            GetPolicyName = SportActPermissions.ActivityTypes.Default;
+            GetListPolicyName = SportActPermissions.ActivityTypes.Default;
+            CreatePolicyName = SportActPermissions.ActivityTypes.Create;
+            UpdatePolicyName = SportActPermissions.ActivityTypes.Edit;
+            DeletePolicyName = SportActPermissions.ActivityTypes.Delete;
         }
     }
 }

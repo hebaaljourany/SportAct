@@ -2,6 +2,7 @@
 using Volo.Abp.Domain.Entities.Auditing;
 using JetBrains.Annotations;
 using Volo.Abp;
+using SportAct.Cities;
 
 namespace SportAct.Locations
 
@@ -11,7 +12,7 @@ namespace SportAct.Locations
         
        
         public string LocationName { get; set; }
-        public Guid CityId { get; set; }
+        public virtual City City { get; set; }
 
         ////////////////
         private Location()

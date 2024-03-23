@@ -28,6 +28,11 @@ namespace SportAct.Locations
             : base(repository)
         {
             _cityRepository = cityRepository;
+            GetPolicyName = SportActPermissions.Locations.Default;
+            GetListPolicyName = SportActPermissions.Locations.Default;
+            CreatePolicyName = SportActPermissions.Locations.Create;
+            UpdatePolicyName = SportActPermissions.Locations.Edit;
+            DeletePolicyName = SportActPermissions.Locations.Delete;
         }
         public override async Task<LocationDto> GetAsync(Guid id)
         {
@@ -36,7 +41,7 @@ namespace SportAct.Locations
 
             //Prepare a query to join books and citys
             var query = from location in queryable
-                        join city in await _cityRepository.GetQueryableAsync() on location.CityId equals city.Id
+                        join city in await _cityRepository.GetQueryableAsync() on location.City.Id equals city.Id
                         where location.Id == id
                         select new { location, city };
 
@@ -59,7 +64,7 @@ namespace SportAct.Locations
 
             //Prepare a query to join books and citys
             var query = from location in queryable
-                        join city in await _cityRepository.GetQueryableAsync() on location.CityId equals city.Id
+                        join city in await _cityRepository.GetQueryableAsync() on location.City.Id equals city.Id
                         select new { location, city };
 
             //Paging

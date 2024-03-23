@@ -72,7 +72,7 @@ export class ReservationComponent implements OnInit {
     this.form = this.fb.group({
       
 
-      Participants: [this.selectedReservation.participants||null, Validators.required],
+      //Participants: [this.selectedReservation.participants||null, Validators.required],
       sportactivityId: [this.selectedReservation.sportActivityId || null, Validators.required],
       
     });

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SportAct.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
@@ -12,9 +13,10 @@ using Volo.Abp.EntityFrameworkCore;
 namespace SportAct.Migrations
 {
     [DbContext(typeof(SportActDbContext))]
-    partial class SportActDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240320084718_Reserve")]
+    partial class Reserve
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,7 +159,7 @@ namespace SportAct.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CityId")
+                    b.Property<Guid>("CityId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -205,7 +207,7 @@ namespace SportAct.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ClientId")
+                    b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -234,7 +236,7 @@ namespace SportAct.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("LastModifierId");
 
-                    b.Property<Guid?>("SportActivityId")
+                    b.Property<Guid>("SportActivityId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -256,7 +258,7 @@ namespace SportAct.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
-                    b.Property<Guid?>("ActivityTypeId")
+                    b.Property<Guid>("ActivityTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Capacity")
@@ -297,7 +299,7 @@ namespace SportAct.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("LastModifierId");
 
-                    b.Property<Guid?>("LocationId")
+                    b.Property<Guid>("LocationId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("MaximumAge")
@@ -1773,41 +1775,41 @@ namespace SportAct.Migrations
 
             modelBuilder.Entity("SportAct.Locations.Location", b =>
                 {
-                    b.HasOne("SportAct.Cities.City", "City")
+                    b.HasOne("SportAct.Cities.City", null)
                         .WithMany()
-                        .HasForeignKey("CityId");
-
-                    b.Navigation("City");
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SportAct.Reservations.Reservation", b =>
                 {
-                    b.HasOne("SportAct.Domain.Client", "Client")
+                    b.HasOne("SportAct.Domain.Client", null)
                         .WithMany()
-                        .HasForeignKey("ClientId");
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("SportAct.SportActivities.SportActivity", "SportActivity")
-                        .WithMany("Reservations")
-                        .HasForeignKey("SportActivityId");
-
-                    b.Navigation("Client");
-
-                    b.Navigation("SportActivity");
+                    b.HasOne("SportAct.SportActivities.SportActivity", null)
+                        .WithMany()
+                        .HasForeignKey("SportActivityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SportAct.SportActivities.SportActivity", b =>
                 {
-                    b.HasOne("SportAct.ActivityTypes.ActivityType", "ActivityType")
+                    b.HasOne("SportAct.ActivityTypes.ActivityType", null)
                         .WithMany()
-                        .HasForeignKey("ActivityTypeId");
+                        .HasForeignKey("ActivityTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("SportAct.Locations.Location", "Location")
+                    b.HasOne("SportAct.Locations.Location", null)
                         .WithMany()
-                        .HasForeignKey("LocationId");
-
-                    b.Navigation("ActivityType");
-
-                    b.Navigation("Location");
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLogAction", b =>
@@ -1950,11 +1952,6 @@ namespace SportAct.Migrations
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("SportAct.SportActivities.SportActivity", b =>
-                {
-                    b.Navigation("Reservations");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>

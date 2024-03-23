@@ -1,15 +1,12 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+﻿using SportAct.Domain;
 using Volo.Abp.Account;
 using Volo.Abp.DependencyInjection;
-using Volo.Abp.Identity;
-using SportAct.Domain;
-
 
 namespace SportAct.Controllers
 {
     [Dependency(ReplaceServices = true)]
-    [ExposeServices(typeof(AccountController))]
+    //[ExposeServices(typeof(AccountController))]
+    [ExposeServices(typeof(AccountController)/*, IncludeSelf = true*/)]
     public class MyAccountController : AccountController
     {
         private readonly IClientRepository _clientRepository;
@@ -20,23 +17,48 @@ namespace SportAct.Controllers
         {
             _clientRepository = clientRepository;
         }
+        /* public MyAccountController(
+             IAccountAppService accountAppService,
+             IClientRepository clientRepository)
+             : base(accountAppService)
+         {
+             _clientRepository = clientRepository;
+         }
+        // [HttpPost("my-register")]
 
-        public async override Task<IdentityUserDto> RegisterAsync(RegisterDto input)
+
+         public async override Task<IdentityUserDto> RegisterAsync(RegisterDto input)
+         {
+             var userDto = await base.RegisterAsync(input);
+
+             // Your custom logic to add UserId to Client entity
+             var client = new Client
+             {
+                 UserId = userDto.Id,
+                 // Other properties initialization
+             };
+             await _clientRepository.InsertAsync(client);
+
+
+             return userDto;
+         }*/
+        /*
+        [HttpPost("my-send-password-reset-code")]
+        public async override Task SendPasswordResetCodeAsync(
+            SendPasswordResetCodeDto input)
         {
-            var userDto = await base.RegisterAsync(input);
-
-            // Your custom logic to add UserId to Client entity
-            var client = new Client
-            {
-                UserId = userDto.Id,
-                // Other properties initialization
-            };
-            await _clientRepository.InsertAsync(client);
-
             Logger.LogInformation("Your custom logic...");
 
-            return userDto;
+            await base.SendPasswordResetCodeAsync(input);
         }
+        [HttpPost("my-reset-password")]
+        public async override Task ResetPasswordAsync(
+           ResetPasswordDto input)
+        {
+            Logger.LogInformation("Your custom logic...");
+
+            await base.ResetPasswordAsync(input);
+        }*/
     }
 }
 

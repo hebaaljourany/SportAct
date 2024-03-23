@@ -11,6 +11,9 @@ using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
 using SportAct.ActivityTypes;
+using SportAct.Reservations;
+using SportAct.Domain;
+using Volo.Abp.Users;
 
 namespace SportAct.SportActivities
 
@@ -26,16 +29,24 @@ namespace SportAct.SportActivities
     {
         private readonly ILocationRepository _locationRepository;
         private readonly IActivityTypeRepository _activitytypeRepository;
+        private readonly ICurrentUser _currentUser;
+        private readonly IClientRepository _clientRepository;
 
         public SportActivityAppService(
             IRepository<SportActivity, Guid> repository,
             ILocationRepository locationRepository,
-            IActivityTypeRepository activitytypeRepository)
+            IActivityTypeRepository activitytypeRepository, IClientRepository clientRepository, ICurrentUser currentUser)
             : base(repository)
         {
             _locationRepository = locationRepository;
             _activitytypeRepository = activitytypeRepository;
-
+            GetPolicyName = SportActPermissions.SportActivities.Default;
+            GetListPolicyName = SportActPermissions.SportActivities.Default;
+            CreatePolicyName = SportActPermissions.SportActivities.Create;
+            UpdatePolicyName = SportActPermissions.SportActivities.Edit;
+            DeletePolicyName = SportActPermissions.SportActivities.Delete;
+            _clientRepository = clientRepository;
+            _currentUser = currentUser;
         }
         ///////////////////////////////////////////
         public override async Task<SportActivityDto> GetAsync(Guid id)
@@ -45,9 +56,9 @@ namespace SportAct.SportActivities
 
             //Prepare a query to join books and locations
             var query = from sportactivity in queryable
-                       join location in await _locationRepository.GetQueryableAsync() on sportactivity.LocationId equals location.Id
-                         join activitytype in await _activitytypeRepository.GetQueryableAsync() on sportactivity.ActivityTypeId equals activitytype.Id
-                                where sportactivity.Id == id
+                        join location in await _locationRepository.GetQueryableAsync() on sportactivity.Location.Id equals location.Id
+                        join activitytype in await _activitytypeRepository.GetQueryableAsync() on sportactivity.ActivityType.Id equals activitytype.Id
+                        where sportactivity.Id == id
                         select new { sportactivity, location, activitytype };
 
             //Execute the query and get the book with location
@@ -66,15 +77,21 @@ namespace SportAct.SportActivities
 
         public override async Task<PagedResultDto<SportActivityDto>> GetListAsync(PagedAndSortedResultRequestDto input)
         {
+            var currentClient = (await _clientRepository.GetQueryableAsync())
+                                .FirstOrDefault(c => c.UserId == _currentUser.Id.Value).Id;
             //Get the IQueryable<Book> from the repository
             var queryable = await Repository.GetQueryableAsync();
 
+            var query = (await Repository.GetQueryableAsync())
+                    .Where(activity => !activity.Reservations.Any() || activity.Reservations.Count < activity.Capacity)
+                    .Where(act => !act.Reservations.Any(res => res.ClientId == currentClient))
+                    .Select(sportactivity => new { sportactivity, sportactivity.Location, sportactivity.ActivityType});
             //Prepare a query to join books and locations
-            var query = from sportactivity in queryable
-                        join location in await _locationRepository.GetQueryableAsync() on sportactivity.LocationId equals location.Id
-                        join activitytype in await _activitytypeRepository.GetQueryableAsync() on sportactivity.ActivityTypeId equals activitytype.Id
-                        where sportactivity.StartedTime.Date > DateTime.Now.AddDays(1).Date
-                        select new { sportactivity, location, activitytype };     
+            //var query = (from sportactivity in queryable
+            //             join location in await _locationRepository.GetQueryableAsync() on sportactivity.LocationId equals location.Id
+            //             join activitytype in await _activitytypeRepository.GetQueryableAsync() on sportactivity.ActivityTypeId equals activitytype.Id
+            //             select new { sportactivity, location, activitytype });
+                             
 
 
             //Paging
@@ -90,8 +107,8 @@ namespace SportAct.SportActivities
             var sportactivityDtos = queryResult.Select(x =>
             {
                 var sportactivityDto = ObjectMapper.Map<SportActivity, SportActivityDto>(x.sportactivity);
-                sportactivityDto.LocationName = x.location.LocationName;
-                sportactivityDto.ActivityTypeName = x.activitytype.ActivityTypeName;
+                sportactivityDto.LocationName = x.Location.LocationName;
+                sportactivityDto.ActivityTypeName = x.ActivityType.ActivityTypeName;
 
                 return sportactivityDto;
             }).ToList();
@@ -115,7 +132,7 @@ namespace SportAct.SportActivities
                 ObjectMapper.Map<List<Location>, List<LocationLookupDto>>(locations)
             );
         }
-         public async Task<ListResultDto<ActivityTypeLookupDto>> GetActivityTypeLookupAsync()
+        public async Task<ListResultDto<ActivityTypeLookupDto>> GetActivityTypeLookupAsync()
         {
             var activitytypes = await _activitytypeRepository.GetListAsync();
 

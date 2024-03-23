@@ -5,7 +5,7 @@ namespace SportAct.Reservations
 {
     public class ReservationDto : AuditedEntityDto<Guid>
     {
-        public int Participants { get; set; }
+       // public int Participants { get; set; }
         public Guid SportActivityId { get; set; }
         public string ActivityName { get; set; }
         public Guid ClientId { get; set; }

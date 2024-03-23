@@ -5,12 +5,14 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using SportAct.SportActivities;
 using SportAct.Permissions;
-using Microsoft.AspNetCore.Authorization;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Users;
+using Volo.Abp;
+using SportAct.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace SportAct.Reservations
 {
@@ -26,13 +28,21 @@ namespace SportAct.Reservations
     {
         private readonly ISportActivityRepository _sportactivityRepository;
         private readonly ICurrentUser _currentUser;
+        private readonly IClientRepository _clientRepository;
 
 
-        public ReservationAppService(IRepository<Reservation, Guid> repository, ISportActivityRepository sportactivityRepository, ICurrentUser currentUser)
+
+        public ReservationAppService(IRepository<Reservation, Guid> repository, IClientRepository clientRepository, ISportActivityRepository sportactivityRepository, ICurrentUser currentUser)
             : base(repository)
         {
+            _clientRepository = clientRepository;
             _sportactivityRepository = sportactivityRepository;
             _currentUser = currentUser;
+            GetPolicyName = SportActPermissions.Reservations.Default;
+            GetListPolicyName = SportActPermissions.Reservations.Default;
+            CreatePolicyName = SportActPermissions.Reservations.Create;
+            UpdatePolicyName = SportActPermissions.Reservations.Edit;
+            DeletePolicyName = SportActPermissions.Reservations.Delete;
         }
         public override async Task<ReservationDto> GetAsync(Guid id)
         {
@@ -41,7 +51,7 @@ namespace SportAct.Reservations
             var currAcc = _currentUser.Roles;
             //Prepare a query to join Reservations and authors
             var query = from reservation in queryable
-                        join sportactivity in await _sportactivityRepository.GetQueryableAsync() on reservation.SportActivityId equals sportactivity.Id
+                        join sportactivity in await _sportactivityRepository.GetQueryableAsync() on reservation.SportActivity.Id equals sportactivity.Id
                         where reservation.Id == id
                         select new { reservation, sportactivity };
 
@@ -68,14 +78,15 @@ namespace SportAct.Reservations
             var queryable = await Repository.GetQueryableAsync();
             var roles = _currentUser.Roles;
             var query = from reservation in queryable
-                        join sportactivity in await _sportactivityRepository.GetQueryableAsync() on reservation.SportActivityId equals sportactivity.Id
+                        join sportactivity in await _sportactivityRepository.GetQueryableAsync() on reservation.SportActivity.Id equals sportactivity.Id
                         select new { reservation, sportactivity };
             if (!roles.Contains("admin"))
             {       
                 //Prepare a query join reservations and authors
                 query = from reservation in queryable
-                            join sportactivity in await _sportactivityRepository.GetQueryableAsync() on reservation.SportActivityId equals sportactivity.Id
-                        where true == true    
+                        join sportactivity in await _sportactivityRepository.GetQueryableAsync() on reservation.SportActivity.Id equals sportactivity.Id
+                        join client in await _clientRepository.GetQueryableAsync() on reservation.Client.Id equals client.Id
+                        where _currentUser.Id == client.UserId
                         select new { reservation, sportactivity }; 
             }
             
@@ -114,6 +125,57 @@ namespace SportAct.Reservations
                 ObjectMapper.Map<List<SportActivity>, List<SportActivityLookupDto>>(sportactivities)
             );
         }
+        public override async Task<ReservationDto> CreateAsync(CreateUpdateReservationDto input)
+        {
+            // Retrieve the current user's ID
+            var userId = _currentUser.Id;
+
+            // Get the IQueryable<Reservation> from the repository
+            var queryable = await Repository.GetQueryableAsync();
+
+            // Modify the query to include the client search logic and retrieve only the ClientId
+            var clientId = from client in await _clientRepository.GetQueryableAsync()
+                           where client.UserId == userId
+                           select client.Id;
+           
+
+            /*  if (clientId == Guid.Empty)
+              {
+                  throw new BusinessException("Client not found for the current user.");
+              }*/
+
+            // Set the ClientId property of the reservation entity
+            input.ClientId = await clientId.FirstOrDefaultAsync();
+
+            // Call the base CreateAsync method to create the reservation
+            return await base.CreateAsync(input);
+        }
+
+        /*public override async Task<ReservationDto> CreateAsync(CreateUpdateReservationDto input)
+        {
+            // Retrieve the current user's ID
+            var userId = _currentUser.Id;
+
+            // Get the IQueryable<Reservation> from the repository
+            var queryable = await Repository.GetQueryableAsync();
+
+            // Modify the query to include the client search logic
+            var query = from client in queryable
+                        where client.ClientId==userId
+            // Execute the query and get the result
+            var queryResult = await AsyncExecuter.FirstOrDefaultAsync(query);
+
+            if (queryResult == null)
+            {
+                throw new BusinessException("Client not found for the current user.");
+            }
+
+            // Set the ClientId property of the reservation entity
+            input.ClientId = queryResult.client.Id;
+
+            // Call the base CreateAsync method to create the reservation
+            return await base.CreateAsync(input);
+        }*/
 
         /*private static string NormalizeSorting(string sorting)
         {

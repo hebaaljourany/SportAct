@@ -1,6 +1,6 @@
 import { ListService, PagedResultDto } from '@abp/ng.core';
 import { Component, OnInit } from '@angular/core';
-import { ClientService, ClientDto } from '@proxy/clients';
+import { ClientDto, ClientService } from '@proxy/domain';
 
 @Component({
   selector: 'app-client',

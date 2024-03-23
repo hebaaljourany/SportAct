@@ -116,7 +116,7 @@ public class SportActDbContext :
             b.ToTable(SportActConsts.DbTablePrefix + "Locations",
                 SportActConsts.DbSchema);
             b.ConfigureByConvention(); //auto configure for the base class props
-            b.HasOne<City>().WithMany().HasForeignKey(x => x.CityId).IsRequired();
+            //b.HasOne<City>().WithMany().HasForeignKey(x => x.City.Id).IsRequired();
             b.Property(x => x.LocationName)
                .IsRequired()
                .HasMaxLength(LocationConsts.MaxLocationNameLength);
@@ -131,8 +131,8 @@ public class SportActDbContext :
                 SportActConsts.DbSchema);
             b.ConfigureByConvention(); //auto configure for the base class props
 
-            b.HasOne<Location>().WithMany().HasForeignKey(x => x.LocationId).IsRequired();
-            b.HasOne<ActivityType>().WithMany().HasForeignKey(x => x.ActivityTypeId).IsRequired();
+            //b.HasOne<Location>().WithMany().HasForeignKey(x => x.Location.Id).IsRequired();
+            //b.HasOne<ActivityType>().WithMany().HasForeignKey(x => x.ActivityType.Id).IsRequired();
             b.Property(x => x.ActivityName)
                        .IsRequired()
                        .HasMaxLength(SportActivityConsts.MaxActivityNameLength);
@@ -157,8 +157,8 @@ public class SportActDbContext :
             b.ToTable(SportActConsts.DbTablePrefix + "Reservations",
                 SportActConsts.DbSchema);
             b.ConfigureByConvention(); //auto configure for the base class props
-            b.HasOne<SportActivity>().WithMany().HasForeignKey(x => x.SportActivityId).IsRequired();
-            b.HasOne<Client>().WithMany().HasForeignKey(x => x.ClientId).IsRequired();
+            //b.HasOne<SportActivity>().WithMany().HasForeignKey(x => x.SportActivity.Id).IsRequired();
+            //b.HasOne<Client>().WithMany().HasForeignKey(x => x.Client.Id).IsRequired();
 
         });
 

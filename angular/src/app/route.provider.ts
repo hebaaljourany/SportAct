@@ -18,14 +18,8 @@ function configureRoutes(routesService: RoutesService) {
       {
         path: '/sport-activity',
         name: '::Menu:Sport-Activity',
-        //iconClass: 'fas fa-book',
+        iconClass: 'fas fa-skating',
         order: 2,
-        layout: eLayoutType.application,
-      },
-      {
-        path: '/Clients',
-        name: '::Menu:Clients',
-        parentName: '::Menu:Sport-Activity',
         layout: eLayoutType.application,
       },
       {
@@ -33,30 +27,35 @@ function configureRoutes(routesService: RoutesService) {
         name: '::Menu:Cities',
         parentName: '::Menu:Sport-Activity',
         layout: eLayoutType.application,
+        requiredPolicy : "SportAct.Cities"
       },
       {
         path: '/locations',
         name: '::Menu:Locations',
         parentName: '::Menu:Sport-Activity',
         layout: eLayoutType.application,
+        requiredPolicy : "SportAct.Locations"
       },
       {
         path: '/sportactivities',
         name: '::Menu:SportActivities',
         parentName: '::Menu:Sport-Activity',
         layout: eLayoutType.application,
+        requiredPolicy : "SportAct.SportActivities"
       },
       {
         path: '/activitytypes',
         name: '::Menu:ActivityTypes',
         parentName: '::Menu:Sport-Activity',
         layout: eLayoutType.application,
+        requiredPolicy : "SportAct.ActivityTypes"
       },
       {
         path: '/reservations',
         name: '::Menu:Reservations',
         parentName: '::Menu:Sport-Activity',
         layout: eLayoutType.application,
+        requiredPolicy : "SportAct.Reservations"
       },
 
       

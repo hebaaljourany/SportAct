@@ -28,6 +28,7 @@ using Volo.Abp.Modularity;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
+using SportAct.Controllers;
 
 namespace SportAct
 {
@@ -41,7 +42,7 @@ namespace SportAct
         typeof(AbpAccountWebOpenIddictModule),
         typeof(AbpAspNetCoreSerilogModule),
         typeof(AbpSwashbuckleModule)
-    )]
+        )]
     public class SportActHttpApiHostModule : AbpModule
     {
         public override void PreConfigureServices(ServiceConfigurationContext context)
@@ -132,6 +133,10 @@ namespace SportAct
             Configure<AbpAspNetCoreMvcOptions>(options =>
             {
                 options.ConventionalControllers.Create(typeof(SportActApplicationModule).Assembly);
+                options.ConventionalControllers.Create(typeof(MyAccountController).Assembly);
+
+
+                //options.IgnoredControllersOnModelExclusion.AddIfNotContains(typeof(MyAccountController));
             });
         }
 

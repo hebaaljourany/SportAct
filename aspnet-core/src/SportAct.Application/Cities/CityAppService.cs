@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SportAct.Permissions;
+using System;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
@@ -17,7 +18,11 @@ namespace SportAct.Cities
         public CityAppService(IRepository<City, Guid> repository)
             : base(repository)
         {
-
+            GetPolicyName = SportActPermissions.Cities.Default;
+            GetListPolicyName = SportActPermissions.Cities.Default;
+            CreatePolicyName = SportActPermissions.Cities.Create;
+            UpdatePolicyName = SportActPermissions.Cities.Edit;
+            DeletePolicyName = SportActPermissions.Cities.Delete;
         }
     }
 }

@@ -18,6 +18,7 @@
     "Close": "Close",
     "Delete": "Delete",
     "Edit": "Edit",
+    "Reserve": "Reserve",
 
     "NewClient": "New client",
     "NewCity": "NewCity",
@@ -42,7 +43,7 @@
     "EndedTime": "EndedTime",
     "Description": "Description",
     "ActivityTypeName": "ActivityTypeName",
-    "Participants": "Participants",
+    //"Participants": "Participants",
 
 
 
@@ -53,7 +54,40 @@
     "BookStore:00001": "There is already an city with the same name: {cityname}",
     "BookStore:00002": "There is already an Location with the same name: {locationname}",
     "BookStore:00003": "There is already an ActivityType with the same name: {activitytypename}",
-    "BookStore:00004": "There is already an SportActivity with the same name: {activityname}"
+    "BookStore:00004": "There is already an SportActivity with the same name: {activityname}",
+
+    "Permission:SportAct": "Sport Activities",
+    "Permission:Cities": "Cities Management",
+    "Permission:Cities.Create": "Creating new city",
+    "Permission:Cities.Edit": "Editing the city",
+    "Permission:Cities.Delete": "Deleting the city",
+
+
+    "Permission:Locations": "Locations Management",
+    "Permission:Locations.Create": "Creating new Location",
+    "Permission:Locations.Edit": "Editing the Location",
+    "Permission:Locations.Delete": "Deleting the Location",
+
+
+    "Permission:ActivityTypes": "Activity Types Management",
+    "Permission:ActivityTypes.Create": "Creating new Activity Type",
+    "Permission:ActivityTypes.Edit": "Editing the Activity Type",
+    "Permission:ActivityTypes.Delete": "Deleting the Activity Type",
+
+
+    "Permission:SportActivities": "Sport Activities Management",
+    "Permission:SportActivities.Create": "Creating new Sport Activitie",
+    "Permission:SportActivities.Edit": "Editing the Sport Activitie",
+    "Permission:SportActivities.Delete": "Deleting the Sport Activitie",
+
+
+
+    "Permission:Reservations": "Reservations Management",
+    "Permission:Reservations.Create": "Creating new Reservation",
+    "Permission:Reservations.Edit": "Editing the Reservation",
+    "Permission:Reservations.Delete": "Deleting the Reservation"
+
+
 
 
 

@@ -6,6 +6,8 @@ import { NgbDateNativeAdapter, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap
 import { ConfirmationService, Confirmation } from '@abp/ng.theme.shared';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ReservationService, ReservationDto } from '@proxy/reservations';
+
 
 @Component({
   selector: 'app-sportactivity',
@@ -23,12 +25,14 @@ export class SportActivityComponent implements OnInit {
   isModalOpen = false;
   locations$: Observable<LocationLookupDto[]>;
   activitytypes$: Observable<ActivityTypeLookupDto[]>;
+  
 
   constructor(
     public readonly list: ListService,
     private sportactivityService: SportActivityService,
     private fb: FormBuilder,
-    private confirmation: ConfirmationService // inject the ConfirmationService
+    private confirmation: ConfirmationService, // inject the ConfirmationService
+    private reservationService: ReservationService
   ) {
     this.locations$ = sportactivityService.getLocationLookup().pipe(map((r) => r.items));
     this.activitytypes$ = sportactivityService.getActivityTypeLookup().pipe(map((r) => r.items));
@@ -71,7 +75,18 @@ export class SportActivityComponent implements OnInit {
       }
     });
   }
-
+  reserveActivity(id: string) {
+   
+    this.sportactivityService.get(id).subscribe((sportactivity) => {
+      this.selectedSportActivity= sportactivity;
+      const reservation: ReservationDto = {
+        // Initialize the reservation object with the selected activity
+        sportActivityId: this.selectedSportActivity.id,
+        activityName: this.selectedSportActivity.activityName,
+      };
+      this.reservationService.create(reservation).subscribe(() => this.list.get());
+    });
+  }
   buildForm() {
     this.form = this.fb.group({
      

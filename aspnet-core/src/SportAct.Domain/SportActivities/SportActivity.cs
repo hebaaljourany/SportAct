@@ -2,8 +2,10 @@
 using Volo.Abp.Domain.Entities.Auditing;
 using JetBrains.Annotations;
 using Volo.Abp;
-
-
+using System.Collections.Generic;
+using SportAct.Reservations;
+using SportAct.Locations;
+using SportAct.ActivityTypes;
 
 namespace SportAct.SportActivities
 
@@ -22,9 +24,11 @@ namespace SportAct.SportActivities
 
         public DateTime EndedTime { get; set; }
         public string Description { get; set; }
+        public virtual Location Location { get; set; }
         public Guid LocationId { get; set; }
+        public virtual ActivityType ActivityType { get; set; } 
         public Guid ActivityTypeId { get; set; }
-
+        public virtual List<Reservation> Reservations { get; set; }
         private SportActivity()
         {
             /* This constructor is for deserialization / ORM purpose */

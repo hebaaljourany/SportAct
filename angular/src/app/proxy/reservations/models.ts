@@ -4,13 +4,11 @@ export interface ClientLookupDto extends EntityDto<string> {
 }
 
 export interface CreateUpdateReservationDto {
-  participants: number;
   sportActivityId?: string;
   clientId?: string;
 }
 
 export interface ReservationDto extends AuditedEntityDto<string> {
-  participants: number;
   sportActivityId?: string;
   activityName?: string;
   clientId?: string;
